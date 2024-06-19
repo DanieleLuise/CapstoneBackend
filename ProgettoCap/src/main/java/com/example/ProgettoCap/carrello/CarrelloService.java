@@ -34,6 +34,13 @@ public class CarrelloService {
         return carrelloRepository.save(carrello);
     }
 
+    public String deleteCarrello(Long id) {
+        if (!carrelloRepository.existsById(id)) {
+            throw new EntityNotFoundException("Carrello non trovato con ID: " + id);
+        }
+        carrelloRepository.deleteById(id);
+        return "Carrello eliminato";
+    }
 
 
 }

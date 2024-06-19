@@ -1,6 +1,7 @@
 package com.example.ProgettoCap.ordine;
 
 import com.example.ProgettoCap.prodotto.Prodotto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 

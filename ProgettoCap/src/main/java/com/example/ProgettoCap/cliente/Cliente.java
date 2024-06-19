@@ -21,6 +21,7 @@ public class Cliente {
     private String cognome;
     @Column(nullable = false)
     private String username;
+    private String email;
     private String citta;
     @Column(nullable = false)
     private String codiceFiscale;

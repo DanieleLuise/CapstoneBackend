@@ -2,6 +2,7 @@ package com.example.ProgettoCap.ordine;
 
 import com.example.ProgettoCap.cliente.Cliente;
 import com.example.ProgettoCap.prodotto.Prodotto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -19,16 +20,15 @@ public class Ordine {
 
     @ManyToOne
     @JoinColumn(name = "clienti_id")
+    @JsonIgnoreProperties({"carrello","ordini"})
     private Cliente cliente;
 
-    @ManyToMany
-    @JoinTable(name = "ordine_prodotti")
-    private List<Prodotto> prodotti;
+
 
     // Getter e Setter per righeOrdine
-    @Setter
-    @Getter
+
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"ordine"})
     private List<RigaOrdine> righeOrdine;
 
 }

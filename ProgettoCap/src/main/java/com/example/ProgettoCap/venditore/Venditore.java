@@ -19,8 +19,6 @@ public class Venditore {
     @Column(nullable = false)
     private String cognome;
 
-    private String citta;
-
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)

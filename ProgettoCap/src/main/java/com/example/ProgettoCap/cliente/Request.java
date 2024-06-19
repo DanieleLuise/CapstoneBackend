@@ -13,7 +13,8 @@ public class Request {
 
     @NotEmpty(message = "il campo cognome e' obbligatorio")
     private String cognome;
-
+    @NotEmpty(message = "il campo username è obbligatorio")
+    private String username;
     @NotEmpty(message = "il compo email e' obbligatorio")
     @Email
     private String email;

@@ -5,11 +5,10 @@ import com.example.ProgettoCap.cliente.Cliente;
 import com.example.ProgettoCap.prodotto.Prodotto;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import java.util.List;
-import java.util.Set;
+
 
 @Data
 @Entity
@@ -24,13 +23,12 @@ public class Carrello {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @Getter
-    @Setter
+
     @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL)
     private List<RigaCarrello> righeCarrello;
 
 
-    private List<Prodotto> prodotti;
+
 
 }
 

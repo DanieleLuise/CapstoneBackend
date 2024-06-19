@@ -24,6 +24,13 @@ public class ProdottoService {
         return prodottoRepository.findAllBy();
     }
 
+    public Response findById(Long id) {
+        Prodotto prodotto = prodottoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Prodotto non trovato con ID: " + id));
+        Response response = new Response();
+        BeanUtils.copyProperties(prodotto, response);
+        return response;
+    }
 
     //POST
     @Transactional

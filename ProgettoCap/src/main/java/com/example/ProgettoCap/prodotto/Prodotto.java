@@ -1,7 +1,9 @@
 package com.example.ProgettoCap.prodotto;
 
 import com.example.ProgettoCap.carrello.Carrello;
+import com.example.ProgettoCap.carrello.RigaCarrello;
 import com.example.ProgettoCap.ordine.Ordine;
+import com.example.ProgettoCap.ordine.RigaOrdine;
 import com.example.ProgettoCap.venditore.Venditore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -27,14 +29,14 @@ public class Prodotto {
 
     @ManyToOne
     @JoinColumn(name = "venditore_id")
-    @JsonIgnoreProperties({"prodotti","id"})
+    @JsonIgnoreProperties({"prodotto","id"})
     private Venditore venditore;
 
-    @OneToMany(mappedBy = "prodotti")
-    private List<Carrello> carrelli;
+    @OneToMany(mappedBy = "prodotto")
+    private List<RigaCarrello> righeCarrello;
 
-    @ManyToMany(mappedBy = "prodotti")
-    private List<Ordine> ordini;
+    @ManyToMany(mappedBy = "prodotto")
+    private List<RigaOrdine> righeOrdini;
 
     private boolean isAvailable = true;
 

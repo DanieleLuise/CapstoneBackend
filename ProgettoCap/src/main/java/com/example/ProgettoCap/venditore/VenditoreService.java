@@ -27,31 +27,32 @@ public class VenditoreService {
     }
 
     //Get X ID
-    public Response getVenditoreById(Long id) {
+    public com.example.ProgettoCap.venditore.Response getVenditoreById(Long id) {
         if (!venditoreRepository.existsById(id)) {
             throw new EntityNotFoundException("Venditore non trovato");
         }
             Venditore entity = venditoreRepository.findById(id).get();
-            Response response = new Response();
+        com.example.ProgettoCap.venditore.Response response = new com.example.ProgettoCap.venditore.Response();
         BeanUtils.copyProperties(entity, response);
         return response;
 
     }
     //Post
     @Transactional
-    public Response create (@Valid Request request) {
+    public com.example.ProgettoCap.venditore.Response create (@Valid Request request) {
             if (venditoreRepository.existsByCodiceFiscaleAndNomeAndCognome(request.getCodiceFiscale(), request.getNome(),request.getCognome())){
                 throw new EntityExistsException("il venditore esiste già");
         }
             Venditore entity = new Venditore();
             BeanUtils.copyProperties(request, entity);
-            Response response = new Response();
+            com.example.ProgettoCap.venditore.Response response = new com.example.ProgettoCap.venditore.Response();
+            BeanUtils.copyProperties(entity,response);
             venditoreRepository.save(entity);
             return response;
     }
 
    //PUT
-    public Response modify(Long id, @Valid Request request){
+    public com.example.ProgettoCap.venditore.Response modify(Long id, @Valid Request request){
         if (venditoreRepository.existsById(id)){
             throw new EntityNotFoundException("venditore non trovato");
         }
@@ -60,7 +61,7 @@ public class VenditoreService {
         BeanUtils.copyProperties(request, entity);
         // L'entity modificato viene quindi salvato nel database e le sue proprietà vengono copiate in un oggetto PersonaResponse.
         venditoreRepository.save(entity);
-        Response response = new Response();
+        com.example.ProgettoCap.venditore.Response response = new com.example.ProgettoCap.venditore.Response();
         BeanUtils.copyProperties(entity,response);
         return response;
     }

@@ -26,6 +26,6 @@ public class RigaCarrello {
 
 
     private int quantita;
-
+    private double prezzo;
 
 }
