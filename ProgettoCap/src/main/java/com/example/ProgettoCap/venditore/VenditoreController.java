@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,9 @@ public class VenditoreController {
     }
 
     @PostMapping
-    public Response createVenditore(@RequestBody Request request) {
-        return venditoreService.create(request);
+    public ResponseEntity<Response> createVenditore(@RequestBody Request request) {
+        Response response = venditoreService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")

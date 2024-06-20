@@ -2,6 +2,7 @@ package com.example.ProgettoCap.carrello;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +26,18 @@ public class CarrelloController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
-    public Carrello createCarrello(@RequestBody Carrello carrello) {
-        return carrelloService.createCarrello(carrello);
+    public ResponseEntity<Carrello> createCarrello(@RequestBody CarrelloRequest carrelloRequest) {
+        try {
+            Carrello carrello = carrelloService.createCarrello(carrelloRequest);
+            return new ResponseEntity<>(carrello, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Carrello> updateCarrello(@PathVariable Long id, @RequestBody Carrello carrelloDetails) {

@@ -19,7 +19,6 @@ public class OrdineService {
     @Autowired
     private CarrelloRepository carrelloRepository;
 
-
     public List<Ordine> getAllOrdini(){
         return ordineRepository.findAll();
     }

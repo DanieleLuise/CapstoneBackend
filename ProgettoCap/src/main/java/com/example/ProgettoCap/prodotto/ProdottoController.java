@@ -2,6 +2,7 @@ package com.example.ProgettoCap.prodotto;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +30,11 @@ public class ProdottoController {
     }
 
     @PostMapping
-    public Response createProdotto(@RequestBody Request request) {
-        return prodottoService.create(request);
+    public ResponseEntity<Response> createProdotto(@RequestBody Request request) {
+        Response response = prodottoService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
 
     @PutMapping("/{id}")

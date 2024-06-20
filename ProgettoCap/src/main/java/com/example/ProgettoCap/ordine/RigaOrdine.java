@@ -15,6 +15,7 @@ public class RigaOrdine {
 
     @ManyToOne
     @JoinColumn(name = "ordine_id")
+    @JsonIgnoreProperties("righeOrdine")
     private Ordine ordine;
 
     @ManyToOne

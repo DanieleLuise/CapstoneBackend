@@ -35,17 +35,26 @@ public class ProdottoService {
     //POST
     @Transactional
     public Response create(Request request){
-       if (!venditoreRepository.existsById(request.getIdVenditore())){
-            throw new EntityNotFoundException("venditore non trovato");
-       }
-       Prodotto entity = new Prodotto();
+        // Verifica se l'ID del venditore esiste nel database
+        Venditore venditore = venditoreRepository.findById(request.getIdVenditore())
+                .orElseThrow(() -> new EntityNotFoundException("Venditore non trovato con ID: " + request.getIdVenditore()));
+
+        // Creazione di un nuovo oggetto Prodotto
+        Prodotto entity = new Prodotto();
         BeanUtils.copyProperties(request, entity);
-        Venditore venditore = venditoreRepository.findById(request.getIdVenditore()).get();
+
+        // Associazione del venditore al prodotto
         entity.setVenditore(venditore);
+
+        // Salvataggio del prodotto nel database
+        Prodotto savedEntity = prodottoRepository.save(entity);
+
+        // Creazione della risposta da restituire
         Response response = new Response();
-        prodottoRepository.save(entity);
-        BeanUtils.copyProperties(entity, response);
+        BeanUtils.copyProperties(savedEntity, response);
+        response.setVenditore(venditore);
         return response;
+
     }
 
     //PUT

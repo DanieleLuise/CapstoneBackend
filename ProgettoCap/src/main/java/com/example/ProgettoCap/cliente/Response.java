@@ -10,6 +10,6 @@ public class Response {
     private String cognome;
     private String username;
     private String email;
-    private String città;
+    private String citta;
     private String codiceFiscale;
 }

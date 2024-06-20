@@ -5,6 +5,7 @@ public class CompleteResponse {
     private String nome;
     private String cognome;
     private String username;
-    private String città;
+    private String email;
+    private String citta;
     private String codiceFiscale;
 }

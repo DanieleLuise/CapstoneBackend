@@ -8,7 +8,7 @@ public class Response {
     private String nome;
     private String cognome;
     private String email;
-    private String città;
+    private String citta;
     private String codiceFiscale;
 
 }

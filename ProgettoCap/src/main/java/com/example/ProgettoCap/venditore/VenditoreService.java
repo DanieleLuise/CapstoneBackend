@@ -4,14 +4,10 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
 import java.util.List;
 
 @Service
@@ -45,15 +41,15 @@ public class VenditoreService {
         }
             Venditore entity = new Venditore();
             BeanUtils.copyProperties(request, entity);
+            Venditore savedEntity = venditoreRepository.save(entity);
             com.example.ProgettoCap.venditore.Response response = new com.example.ProgettoCap.venditore.Response();
-            BeanUtils.copyProperties(entity,response);
-            venditoreRepository.save(entity);
+            BeanUtils.copyProperties(savedEntity,response);
             return response;
     }
 
    //PUT
     public com.example.ProgettoCap.venditore.Response modify(Long id, @Valid Request request){
-        if (venditoreRepository.existsById(id)){
+        if (!venditoreRepository.existsById(id)){
             throw new EntityNotFoundException("venditore non trovato");
         }
         // Se l'entity esiste, le sue proprietà vengono modificate con quelle presenti nell'oggetto PersonaRequest.

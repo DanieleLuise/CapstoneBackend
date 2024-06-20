@@ -24,12 +24,12 @@ public class Carrello {
     private Cliente cliente;
 
 
-    @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RigaCarrello> righeCarrello;
-
-
-
-
 }
+
+
+
+
 
 

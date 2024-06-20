@@ -22,14 +22,15 @@ public class Cliente {
     @Column(nullable = false)
     private String username;
     private String email;
+
     private String citta;
     @Column(nullable = false)
     private String codiceFiscale;
 
-   // @OneToOne(mappedBy = "clienti")
-   //private Carrello carrello;
+   @OneToOne(mappedBy = "cliente")
+   private Carrello carrello;
 
-   // @ManyToMany(mappedBy = "clienti")
+    //@OneToMany(mappedBy = "clienti")
     //private List<Ordine> ordini;
 
 

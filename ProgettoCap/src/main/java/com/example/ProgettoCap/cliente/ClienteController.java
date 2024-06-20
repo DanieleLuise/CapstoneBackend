@@ -3,6 +3,8 @@ package com.example.ProgettoCap.cliente;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +32,8 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<Response>  createCliente(@RequestBody Request request) {
-        return ResponseEntity.ok(clienteService.create(request));
+        Response response = clienteService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")

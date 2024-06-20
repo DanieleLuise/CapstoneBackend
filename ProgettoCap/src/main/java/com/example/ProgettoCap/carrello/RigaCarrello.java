@@ -1,10 +1,9 @@
 package com.example.ProgettoCap.carrello;
 
 import com.example.ProgettoCap.prodotto.Prodotto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 @Entity
@@ -14,18 +13,16 @@ public class RigaCarrello {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-
     @ManyToOne
     @JoinColumn(name = "carrello_id")
+    @JsonIgnoreProperties("righeCarrello")
     private Carrello carrello;
-
 
     @ManyToOne
     @JoinColumn(name = "prodotto_id")
     private Prodotto prodotto;
 
-
     private int quantita;
     private double prezzo;
-
 }
+

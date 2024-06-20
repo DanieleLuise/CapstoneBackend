@@ -1,8 +1,6 @@
 package com.example.ProgettoCap.prodotto;
 
-import com.example.ProgettoCap.carrello.Carrello;
 import com.example.ProgettoCap.carrello.RigaCarrello;
-import com.example.ProgettoCap.ordine.Ordine;
 import com.example.ProgettoCap.ordine.RigaOrdine;
 import com.example.ProgettoCap.venditore.Venditore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -37,6 +35,8 @@ public class Prodotto {
 
     @ManyToMany(mappedBy = "prodotto")
     private List<RigaOrdine> righeOrdini;
+
+
 
     private boolean isAvailable = true;
 

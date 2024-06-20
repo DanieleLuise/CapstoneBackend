@@ -44,9 +44,9 @@ public class ClienteService {
         }
         Cliente entity = new Cliente();
         BeanUtils.copyProperties(request, entity);
+        Cliente savedEntity = clienteRepository.save(entity);
         Response response = new Response();
-        BeanUtils.copyProperties(entity, response);
-        clienteRepository.save(entity);
+        BeanUtils.copyProperties(savedEntity, response);
         return response;
     }
 
