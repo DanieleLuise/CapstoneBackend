@@ -22,7 +22,8 @@ public class Prodotto {
     private String descrizione;
     @Column(nullable = false)
     private Double prezzo;
-
+    @Column(nullable = false)
+    private int quantita;
 
     @ManyToOne
     @JoinColumn(name = "venditore_id")

@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface CarrelloRepository extends JpaRepository<Carrello, Long> {
     Optional<Carrello> findByClienteId(Long clienteId);
+    Optional<Carrello> findByVenditoreId(Long venditoreId);
 }

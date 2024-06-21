@@ -28,8 +28,8 @@ public class Cliente {
     @Column(nullable = false)
     private String codiceFiscale;
 
-   @OneToOne(mappedBy = "cliente")
-
+   @OneToOne(mappedBy = "cliente",cascade = CascadeType.ALL, orphanRemoval = true)
+   @JsonIgnoreProperties("cliente")
    private Carrello carrello;
 
     //@OneToMany(mappedBy = "clienti")

@@ -27,30 +27,63 @@ public class CarrelloController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<Carrello> createCarrello(@RequestBody CarrelloRequest carrelloRequest) {
+    @PostMapping("/cliente/{clienteId}")
+    public ResponseEntity<Carrello> createCarrelloForCliente(@PathVariable Long clienteId) {
         try {
-            Carrello carrello = carrelloService.createCarrello(carrelloRequest);
+            Carrello carrello = carrelloService.createCarrelloForCliente(clienteId);
             return new ResponseEntity<>(carrello, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Carrello> updateCarrello(@PathVariable Long id, @RequestBody Carrello carrelloDetails) {
+    @PostMapping("/venditore/{venditoreId}")
+    public ResponseEntity<Carrello> createCarrelloForVenditore(@PathVariable Long venditoreId) {
         try {
-            return ResponseEntity.ok(carrelloService.updateCarrello(id, carrelloDetails));
+            Carrello carrello = carrelloService.createCarrelloForVenditore(venditoreId);
+            return new ResponseEntity<>(carrello, HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{carrelloId}/add/{prodottoId}")
+    public ResponseEntity<Carrello> addProdottoToCarrello(@PathVariable Long carrelloId, @PathVariable Long prodottoId, @RequestParam int quantita) {
+        try {
+            Carrello carrello = carrelloService.addProdottoToCarrello(carrelloId, prodottoId, quantita);
+            return new ResponseEntity<>(carrello, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{carrelloId}/remove/{rigaCarrelloId}")
+    public ResponseEntity<Carrello> removeProdottoFromCarrello(@PathVariable Long carrelloId, @PathVariable Long rigaCarrelloId) {
+        try {
+            Carrello carrello = carrelloService.removeProdottoFromCarrello(carrelloId, rigaCarrelloId);
+            return new ResponseEntity<>(carrello, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{carrelloId}/update/{rigaCarrelloId}")
+    public ResponseEntity<Carrello> updateQuantitaProdotto(@PathVariable Long carrelloId, @PathVariable Long rigaCarrelloId, @RequestParam int nuovaQuantita) {
+        try {
+            Carrello carrello = carrelloService.updateQuantitaProdotto(carrelloId, rigaCarrelloId, nuovaQuantita);
+            return new ResponseEntity<>(carrello, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCarrello(@PathVariable Long id) {
-        carrelloService.deleteCarrello(id);
-        return ResponseEntity.noContent().build();
+        try {
+            carrelloService.deleteCarrello(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 }

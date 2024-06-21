@@ -1,5 +1,6 @@
 package com.example.ProgettoCap.venditore;
 
+import com.example.ProgettoCap.carrello.Carrello;
 import com.example.ProgettoCap.prodotto.Prodotto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -28,10 +29,12 @@ public class Venditore {
     @Column(nullable = false)
     private String codiceFiscale;
 
-    @OneToMany
+    @OneToMany(mappedBy = "venditore")
     @JsonIgnoreProperties({"venditore"})
     private List<Prodotto> prodotti;
 
-
+    @OneToOne(mappedBy = "venditore", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("venditore")
+    private Carrello carrello;
 
 }
