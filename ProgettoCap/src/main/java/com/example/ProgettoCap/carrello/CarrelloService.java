@@ -2,6 +2,8 @@ package com.example.ProgettoCap.carrello;
 
 import com.example.ProgettoCap.cliente.Cliente;
 import com.example.ProgettoCap.cliente.ClienteRepository;
+import com.example.ProgettoCap.prodotto.Prodotto;
+import com.example.ProgettoCap.prodotto.ProdottoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,8 @@ public class CarrelloService {
     private CarrelloRepository carrelloRepository;
     @Autowired
     private ClienteRepository clienteRepository;
-
+    @Autowired
+    private ProdottoRepository prodottoRepository;
 
 
     public List<Carrello> getAllCarrelli() {
@@ -29,19 +32,22 @@ public class CarrelloService {
         return carrelloRepository.findById(id);
     }
     @Transactional
-    public Carrello createCarrello(CarrelloRequest carrelloRequest) {
-        Cliente cliente = clienteRepository.findById(carrelloRequest.getClienteId())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente non trovato con ID: " + carrelloRequest.getClienteId()));
+    public Carrello createCarrello(CarrelloRequest request) {
+        Cliente cliente = clienteRepository.findById(request.getClienteId())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente non trovato con ID: " + request.getClienteId()));
 
         Carrello carrello = new Carrello();
         carrello.setCliente(cliente);
 
-        List<RigaCarrello> righe = carrelloRequest.getProdotti().stream().map(prod -> {
+        List<RigaCarrello> righe = request.getProdotti().stream().map(prodRequest -> {
+            Prodotto prodotto = prodottoRepository.findById(prodRequest.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Prodotto non trovato con ID: " + prodRequest.getId()));
+
             RigaCarrello riga = new RigaCarrello();
             riga.setCarrello(carrello);
-            riga.setProdotto(prod);
-            riga.setQuantita(prod.getQuantità());  // Assicurati che Prodotto abbia un campo quantita
-            riga.setPrezzo(prod.getPrezzo());     // Assicurati che Prodotto abbia un campo prezzo
+            riga.setProdotto(prodotto);
+
+            riga.setPrezzo(prodRequest.getPrezzo());
             return riga;
         }).collect(Collectors.toList());
 

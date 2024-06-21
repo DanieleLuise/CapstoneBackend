@@ -20,9 +20,9 @@ public class ProdottoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response> getProdottoById(@PathVariable Long id) {
+    public ResponseEntity<ProdottoResponse> getProdottoById(@PathVariable Long id) {
         try {
-            Response prodotto = prodottoService.findById(id);
+            ProdottoResponse prodotto = prodottoService.findById(id);
             return ResponseEntity.ok(prodotto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -30,17 +30,17 @@ public class ProdottoController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> createProdotto(@RequestBody Request request) {
-        Response response = prodottoService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<ProdottoResponse> createProdotto(@RequestBody ProdottoRequest prodottoRequest) {
+        ProdottoResponse prodottoResponse = prodottoService.create(prodottoRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(prodottoResponse);
     }
 
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> updateProdotto(@PathVariable Long id, @RequestBody Request request) {
+    public ResponseEntity<ProdottoResponse> updateProdotto(@PathVariable Long id, @RequestBody ProdottoRequest prodottoRequest) {
         try {
-            return ResponseEntity.ok(prodottoService.modify(id, request));
+            return ResponseEntity.ok(prodottoService.modify(id, prodottoRequest));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

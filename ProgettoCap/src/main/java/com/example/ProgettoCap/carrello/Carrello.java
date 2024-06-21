@@ -3,6 +3,7 @@ package com.example.ProgettoCap.carrello;
 import com.example.ProgettoCap.cliente.Cliente;
 
 import com.example.ProgettoCap.prodotto.Prodotto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,10 +22,12 @@ public class Carrello {
 
     @OneToOne
     @JoinColumn(name = "cliente_id")
+    @JsonIgnoreProperties({"carrello"})
     private Cliente cliente;
 
 
     @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"carrello"})
     private List<RigaCarrello> righeCarrello;
 }
 

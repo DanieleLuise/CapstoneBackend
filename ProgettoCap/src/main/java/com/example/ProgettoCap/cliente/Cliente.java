@@ -3,6 +3,7 @@ package com.example.ProgettoCap.cliente;
 
 import com.example.ProgettoCap.carrello.Carrello;
 import com.example.ProgettoCap.ordine.Ordine;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class Cliente {
     private String codiceFiscale;
 
    @OneToOne(mappedBy = "cliente")
+
    private Carrello carrello;
 
     //@OneToMany(mappedBy = "clienti")

@@ -4,6 +4,8 @@ import com.example.ProgettoCap.prodotto.Prodotto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 @Data
 @Entity
@@ -20,7 +22,9 @@ public class RigaCarrello {
 
     @ManyToOne
     @JoinColumn(name = "prodotto_id")
+    @JsonIgnoreProperties({"righeCarrello","righeOrdini"})
     private Prodotto prodotto;
+
 
     private int quantita;
     private double prezzo;

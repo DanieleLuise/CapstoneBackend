@@ -22,15 +22,15 @@ public class Prodotto {
     private String descrizione;
     @Column(nullable = false)
     private Double prezzo;
-    @Column(nullable = false)
-    private int quantità;
+
 
     @ManyToOne
     @JoinColumn(name = "venditore_id")
-    @JsonIgnoreProperties({"prodotto","id"})
+    @JsonIgnoreProperties({"prodotti","id"})
     private Venditore venditore;
 
     @OneToMany(mappedBy = "prodotto")
+    @JsonIgnoreProperties({"prodotto"})
     private List<RigaCarrello> righeCarrello;
 
     @ManyToMany(mappedBy = "prodotto")

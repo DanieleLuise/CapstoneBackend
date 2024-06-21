@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -24,17 +23,17 @@ public class ProdottoService {
         return prodottoRepository.findAllBy();
     }
 
-    public Response findById(Long id) {
+    public ProdottoResponse findById(Long id) {
         Prodotto prodotto = prodottoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Prodotto non trovato con ID: " + id));
-        Response response = new Response();
+        ProdottoResponse response = new ProdottoResponse();
         BeanUtils.copyProperties(prodotto, response);
         return response;
     }
 
     //POST
     @Transactional
-    public Response create(Request request){
+    public ProdottoResponse create(ProdottoRequest request){
         // Verifica se l'ID del venditore esiste nel database
         Venditore venditore = venditoreRepository.findById(request.getIdVenditore())
                 .orElseThrow(() -> new EntityNotFoundException("Venditore non trovato con ID: " + request.getIdVenditore()));
@@ -50,26 +49,26 @@ public class ProdottoService {
         Prodotto savedEntity = prodottoRepository.save(entity);
 
         // Creazione della risposta da restituire
-        Response response = new Response();
-        BeanUtils.copyProperties(savedEntity, response);
-        response.setVenditore(venditore);
-        return response;
+        ProdottoResponse prodottoResponse = new ProdottoResponse();
+        BeanUtils.copyProperties(savedEntity, prodottoResponse);
+        prodottoResponse.setVenditore(venditore);
+        return prodottoResponse;
 
     }
 
     //PUT
-    public Response modify(Long id, Request request){
-        if (!venditoreRepository.existsById(request.getIdVenditore())){
+    public ProdottoResponse modify(Long id, ProdottoRequest prodottoRequest){
+        if (!venditoreRepository.existsById(prodottoRequest.getIdVenditore())){
             throw new EntityNotFoundException("venditore non trovato");
         }
         Prodotto entity = prodottoRepository.findById(id).get();
-        Venditore venditore = venditoreRepository.findById(request.getIdVenditore()).get();
-        BeanUtils.copyProperties(request, entity);
+        Venditore venditore = venditoreRepository.findById(prodottoRequest.getIdVenditore()).get();
+        BeanUtils.copyProperties(prodottoRequest, entity);
         entity.setVenditore(venditore);
         prodottoRepository.save(entity);
-        Response response = new Response();
-        BeanUtils.copyProperties(entity,response);
-        return response;
+        ProdottoResponse prodottoResponse = new ProdottoResponse();
+        BeanUtils.copyProperties(entity, prodottoResponse);
+        return prodottoResponse;
 
     }
 
