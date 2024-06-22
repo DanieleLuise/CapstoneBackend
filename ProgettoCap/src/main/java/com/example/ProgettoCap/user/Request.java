@@ -1,4 +1,4 @@
-package com.example.ProgettoCap.cliente;
+package com.example.ProgettoCap.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -12,13 +12,14 @@ public class Request {
     private String nome;
     @NotEmpty(message = "il campo cognome e' obbligatorio")
     private String cognome;
-    @NotEmpty(message = "il campo username è obbligatorio")
+    @NotEmpty(message = "il campo username e' obbligatorio")
     private String username;
-    @NotEmpty(message = "Il campo email è obbligatorio")
+    @NotEmpty(message = "il compo email e' obbligatorio")
     @Email
     private String email;
-    @NotEmpty(message = "Il campo città è obbligatorio")
+    @NotEmpty(message = "il campo citta e' obbligatorio")
     private String citta;
     @NotEmpty(message = "il campo codice fiscale e' obbligatorio")
     private String codiceFiscale;
+
 }

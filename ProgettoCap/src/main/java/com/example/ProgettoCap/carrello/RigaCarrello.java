@@ -19,11 +19,13 @@ public class RigaCarrello {
     @ManyToOne
     @JoinColumn(name = "carrello_id")
     @JsonIgnoreProperties("righeCarrello")
+    @ToString.Exclude
     private Carrello carrello;
 
     @ManyToOne
     @JoinColumn(name = "prodotto_id")
-    @JsonIgnoreProperties({"righeCarrello","righeOrdini"})
+    @JsonIgnoreProperties({"righeCarrello"})
+    @ToString.Exclude
     private Prodotto prodotto;
 
 

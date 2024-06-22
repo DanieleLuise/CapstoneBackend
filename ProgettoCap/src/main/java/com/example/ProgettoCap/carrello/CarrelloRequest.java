@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class CarrelloRequest {
-    private Long clienteId;
+    private Long userId;
     private List<Prodotto> prodotti;
 
 }

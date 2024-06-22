@@ -1,7 +1,7 @@
 package com.example.ProgettoCap.prodotto;
 
 import com.example.ProgettoCap.carrello.RigaCarrello;
-import com.example.ProgettoCap.venditore.Venditore;
+import com.example.ProgettoCap.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,19 +26,14 @@ public class Prodotto {
     private int quantita;
 
     @ManyToOne
-    @JoinColumn(name = "venditore_id")
-    @JsonIgnoreProperties({"prodotti"})
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"prodotti", "carrello"})
     @ToString.Exclude
-    private Venditore venditore;
+    private User user;
 
     @OneToMany(mappedBy = "prodotto")
-    @JsonIgnoreProperties({"prodotto"})
-
+    @JsonIgnoreProperties({"prodotto", "carrello"})
     private List<RigaCarrello> righeCarrello;
-
-
-
-
 
 
 

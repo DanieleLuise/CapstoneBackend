@@ -1,4 +1,4 @@
-package com.example.ProgettoCap.cliente;
+package com.example.ProgettoCap.user;
 
 public class CompleteResponse {
     private Long id;

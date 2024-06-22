@@ -1,4 +1,4 @@
-package com.example.ProgettoCap.venditore;
+package com.example.ProgettoCap.user;
 
 import lombok.Data;
 

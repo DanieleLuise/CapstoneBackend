@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface CarrelloRepository extends JpaRepository<Carrello, Long> {
-    Optional<Carrello> findByClienteId(Long clienteId);
-    Optional<Carrello> findByVenditoreId(Long venditoreId);
+
+    Optional<Carrello> findByUserId(Long userId);
 }

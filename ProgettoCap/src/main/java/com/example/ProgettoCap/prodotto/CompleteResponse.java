@@ -1,6 +1,6 @@
 package com.example.ProgettoCap.prodotto;
 
-import com.example.ProgettoCap.venditore.Venditore;
+import com.example.ProgettoCap.user.User;
 import lombok.Data;
 
 @Data
@@ -10,6 +10,6 @@ public class CompleteResponse {
     private String descrizione;
     private Double prezzo;
     private int quantità;
-    private Venditore venditore;
+    private User user;
 
 }

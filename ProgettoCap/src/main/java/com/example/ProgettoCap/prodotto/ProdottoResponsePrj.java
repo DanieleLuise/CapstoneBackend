@@ -7,8 +7,8 @@ public interface ProdottoResponsePrj {
     Long getId();
     String getNome();
 
-    @Value("#{target.venditore.nome}") // l'annotazione Value recupera la posizione dell'elemento richiesto all'interno della classe
-    String getNomeVenditore();
-    @Value("#{target.venditore.cognome}") // target e' riferita all' entita principale, seguita poi dalla entita "figlia" e poi dall'attributo richiesto specifico.
-    String getCognomeVenditore();
+    @Value("#{target.user.nome}") // l'annotazione Value recupera la posizione dell'elemento richiesto all'interno della classe
+    String getNomeuser();
+    @Value("#{target.user.cognome}") // target e' riferita all' entita principale, seguita poi dalla entita "figlia" e poi dall'attributo richiesto specifico.
+    String getCognomeuser();
 }

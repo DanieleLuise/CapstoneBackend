@@ -1,4 +1,4 @@
-package com.example.ProgettoCap.venditore;
+package com.example.ProgettoCap.user;
 
 import com.example.ProgettoCap.carrello.Carrello;
 import com.example.ProgettoCap.prodotto.Prodotto;
@@ -10,8 +10,8 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "venditori")
-public class Venditore {
+@Table(name = "user")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -29,12 +29,12 @@ public class Venditore {
     @Column(nullable = false)
     private String codiceFiscale;
 
-    @OneToMany(mappedBy = "venditore")
-    @JsonIgnoreProperties({"venditore"})
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties({"user","righeCarrello"})
     private List<Prodotto> prodotti;
 
-    @OneToOne(mappedBy = "venditore", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("venditore")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"user","righeCarrello"})
     private Carrello carrello;
 
 }

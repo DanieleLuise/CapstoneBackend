@@ -1,11 +1,9 @@
 package com.example.ProgettoCap.carrello;
 
-import com.example.ProgettoCap.cliente.Cliente;
-import com.example.ProgettoCap.cliente.ClienteRepository;
 import com.example.ProgettoCap.prodotto.Prodotto;
 import com.example.ProgettoCap.prodotto.ProdottoRepository;
-import com.example.ProgettoCap.venditore.Venditore;
-import com.example.ProgettoCap.venditore.VenditoreRepository;
+import com.example.ProgettoCap.user.User;
+import com.example.ProgettoCap.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +18,9 @@ public class CarrelloService {
     @Autowired
     private CarrelloRepository carrelloRepository;
     @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
     private ProdottoRepository prodottoRepository;
     @Autowired
-    private VenditoreRepository venditoreRepository;
+    private UserRepository userRepository;
 
 
 
@@ -35,22 +31,14 @@ public class CarrelloService {
     public Optional<Carrello> getCarrelloById(Long id) {
         return carrelloRepository.findById(id);
     }
+
     @Transactional
-    public Carrello createCarrelloForCliente(Long clienteId) {
-        Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente non trovato con ID: " + clienteId));
+    public Carrello createCarrelloForUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User non trovato con ID: " + userId));
 
         Carrello carrello = new Carrello();
-        carrello.setCliente(cliente);
-        return carrelloRepository.save(carrello);
-    }
-    @Transactional
-    public Carrello createCarrelloForVenditore(Long venditoreId) {
-        Venditore venditore = venditoreRepository.findById(venditoreId)
-                .orElseThrow(() -> new EntityNotFoundException("Venditore non trovato con ID: " + venditoreId));
-
-        Carrello carrello = new Carrello();
-        carrello.setVenditore(venditore);
+        carrello.setUser(user);
         return carrelloRepository.save(carrello);
     }
 

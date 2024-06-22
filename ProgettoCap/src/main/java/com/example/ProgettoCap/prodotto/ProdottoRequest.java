@@ -10,5 +10,5 @@ public class ProdottoRequest {
     private String descrizione;
     private Double prezzo;
     private int quantità;
-    private Long idVenditore;
+    private Long idUser;
 }

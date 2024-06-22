@@ -1,13 +1,11 @@
 package com.example.ProgettoCap.carrello;
 
-import com.example.ProgettoCap.cliente.Cliente;
 
-
-import com.example.ProgettoCap.venditore.Venditore;
+import com.example.ProgettoCap.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-
+import lombok.ToString;
 
 
 import java.util.List;
@@ -22,20 +20,17 @@ public class Carrello {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "cliente_id")
-    @JsonIgnoreProperties({"carrello"})
-    private Cliente cliente;
+
 
     @OneToOne
-    @JoinColumn(name = "venditore_id")
-    @JsonIgnoreProperties("carrello")
-
-    private Venditore venditore;
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"carrello",})
+    @ToString.Exclude
+    private User user;
 
     @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties({"carrello"})
-
+    @JsonIgnoreProperties({"carrello",})
+    @ToString.Exclude
     private List<RigaCarrello> righeCarrello;
 
 }

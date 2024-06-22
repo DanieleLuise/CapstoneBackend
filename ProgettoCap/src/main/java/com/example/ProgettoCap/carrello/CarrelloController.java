@@ -27,20 +27,11 @@ public class CarrelloController {
     }
 
 
-    @PostMapping("/cliente/{clienteId}")
-    public ResponseEntity<Carrello> createCarrelloForCliente(@PathVariable Long clienteId) {
-        try {
-            Carrello carrello = carrelloService.createCarrelloForCliente(clienteId);
-            return new ResponseEntity<>(carrello, HttpStatus.CREATED);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
 
-    @PostMapping("/venditore/{venditoreId}")
-    public ResponseEntity<Carrello> createCarrelloForVenditore(@PathVariable Long venditoreId) {
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<Carrello> createCarrelloForUser(@PathVariable Long userId) {
         try {
-            Carrello carrello = carrelloService.createCarrelloForVenditore(venditoreId);
+            Carrello carrello = carrelloService.createCarrelloForUser(userId);
             return new ResponseEntity<>(carrello, HttpStatus.CREATED);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
