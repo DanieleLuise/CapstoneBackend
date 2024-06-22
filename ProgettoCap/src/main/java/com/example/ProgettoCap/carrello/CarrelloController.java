@@ -76,6 +76,15 @@ public class CarrelloController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+    @PutMapping("/{carrelloId}/svuota")
+    public ResponseEntity<Carrello> svuotaCarrello(@PathVariable Long carrelloId) {
+        try {
+            Carrello carrello = carrelloService.svuotaCarrello(carrelloId);
+            return new ResponseEntity<>(carrello, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCarrello(@PathVariable Long id) {

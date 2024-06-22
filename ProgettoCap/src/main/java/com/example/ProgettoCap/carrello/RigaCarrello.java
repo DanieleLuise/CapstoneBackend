@@ -1,6 +1,7 @@
 package com.example.ProgettoCap.carrello;
 
 import com.example.ProgettoCap.prodotto.Prodotto;
+import com.example.ProgettoCap.prodotto.ProdottoResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,5 +29,7 @@ public class RigaCarrello {
 
     private int quantita;
     private double prezzo;
+
+
 }
 

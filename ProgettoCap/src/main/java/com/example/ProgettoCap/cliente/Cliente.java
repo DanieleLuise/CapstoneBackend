@@ -2,12 +2,9 @@ package com.example.ProgettoCap.cliente;
 
 
 import com.example.ProgettoCap.carrello.Carrello;
-import com.example.ProgettoCap.ordine.Ordine;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Entity
@@ -30,10 +27,10 @@ public class Cliente {
 
    @OneToOne(mappedBy = "cliente",cascade = CascadeType.ALL, orphanRemoval = true)
    @JsonIgnoreProperties("cliente")
+
    private Carrello carrello;
 
-    //@OneToMany(mappedBy = "clienti")
-    //private List<Ordine> ordini;
+
 
 
 

@@ -1,11 +1,11 @@
 package com.example.ProgettoCap.prodotto;
 
 import com.example.ProgettoCap.carrello.RigaCarrello;
-import com.example.ProgettoCap.ordine.RigaOrdine;
 import com.example.ProgettoCap.venditore.Venditore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -27,18 +27,22 @@ public class Prodotto {
 
     @ManyToOne
     @JoinColumn(name = "venditore_id")
-    @JsonIgnoreProperties({"prodotti","id"})
+    @JsonIgnoreProperties({"prodotti"})
+    @ToString.Exclude
     private Venditore venditore;
 
     @OneToMany(mappedBy = "prodotto")
     @JsonIgnoreProperties({"prodotto"})
+
     private List<RigaCarrello> righeCarrello;
 
-    @ManyToMany(mappedBy = "prodotto")
-    private List<RigaOrdine> righeOrdini;
+
+
+
 
 
 
     private boolean isAvailable = true;
+
 
 }

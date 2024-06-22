@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CarrelloService {
@@ -26,6 +25,8 @@ public class CarrelloService {
     private ProdottoRepository prodottoRepository;
     @Autowired
     private VenditoreRepository venditoreRepository;
+
+
 
     public List<Carrello> getAllCarrelli() {
         return carrelloRepository.findAll();
@@ -43,7 +44,7 @@ public class CarrelloService {
         carrello.setCliente(cliente);
         return carrelloRepository.save(carrello);
     }
-
+    @Transactional
     public Carrello createCarrelloForVenditore(Long venditoreId) {
         Venditore venditore = venditoreRepository.findById(venditoreId)
                 .orElseThrow(() -> new EntityNotFoundException("Venditore non trovato con ID: " + venditoreId));
@@ -100,6 +101,16 @@ public class CarrelloService {
 
         return carrelloRepository.save(carrello);
     }
+    @Transactional
+    public Carrello svuotaCarrello(Long carrelloId) {
+        Carrello carrello = carrelloRepository.findById(carrelloId)
+                .orElseThrow(() -> new EntityNotFoundException("Carrello non trovato con ID: " + carrelloId));
+
+        carrello.getRigheCarrello().clear();
+        return carrelloRepository.save(carrello);
+    }
+
+
 
     public void deleteCarrello(Long id) {
         if (!carrelloRepository.existsById(id)) {
@@ -107,6 +118,10 @@ public class CarrelloService {
         }
         carrelloRepository.deleteById(id);
     }
+
+
+
+
 
 
 }
