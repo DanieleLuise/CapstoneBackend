@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,6 +29,12 @@ public class User {
     private String citta;
     @Column(nullable = false)
     private String codiceFiscale;
+    @Column(nullable = false, length = 125)
+    private String password;
+    private String avatar;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private final List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties({"user","righeCarrello"})

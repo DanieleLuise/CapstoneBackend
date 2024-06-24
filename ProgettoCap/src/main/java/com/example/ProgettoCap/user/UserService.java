@@ -1,22 +1,50 @@
 package com.example.ProgettoCap.user;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.example.ProgettoCap.email.EmailService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Validated
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
+    private final RoleRepository roleRepository;
+    private final AuthenticationManager auth;
+    private final JwtUtils jwt;
+    private final EmailService emailService;
+    private final Cloudinary cloudinary;
+
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private String maxFileSize;
     //GET ALL
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -69,6 +97,101 @@ public class UserService {
         }
         userRepository.deleteById(id);
         return "user Eliminato";
+    }
+
+
+
+    //LOGIN E REGISTER
+
+
+    public Optional<LoginResponseDTO> login(String username, String password) {
+        try {
+            var a = auth.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            a.getAuthorities();
+            SecurityContextHolder.getContext().setAuthentication(a);
+
+            var user = userRepository.findOneByUsername(username).orElseThrow();
+            var dto = LoginResponseDTO.builder()
+                    .withUser(RegisteredUserDTO.builder()
+                            .withId(user.getId())
+                            .withFirstName(user.getNome())
+                            .withLastName(user.getCognome())
+                            .withEmail(user.getEmail())
+                            .withUsername(user.getUsername())
+                            .build())
+                    .build();
+
+            dto.setToken(jwt.generateToken(a));
+
+            return Optional.of(dto);
+        } catch (NoSuchElementException | AuthenticationException e) {
+            log.error("Authentication failed", e);
+            throw new InvalidLoginException(username, password);
+        }
+    }
+
+    public RegisteredUserDTO register(RegisterUserDTO register) {
+        if (userRepository.existsByUsername(register.getUsername())) {
+            throw new EntityExistsException("Utente gia' esistente");
+        }
+        if (userRepository.existsByEmail(register.getEmail())) {
+            throw new EntityExistsException("Email gia' registrata");
+        }
+        Role role = roleRepository.findById("USER").orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        User user = new User();
+        BeanUtils.copyProperties(register, user);
+        user.setPassword(encoder.encode(register.getPassword()));
+        user.getRoles().add(role);
+        userRepository.save(user);
+        RegisteredUserDTO response = new RegisteredUserDTO();
+        BeanUtils.copyProperties(user, response);
+        response.setRoles(List.of(role));
+        emailService.sendWelcomeEmail(user.getEmail());
+
+        return response;
+    }
+
+    @Transactional
+    public String uploadAvatar(Long id, MultipartFile image) throws IOException {
+        long maxFileSize = getMaxFileSizeInBytes();
+        if (image.getSize() > maxFileSize) {
+            throw new FileSizeExceededException("File size exceeds the maximum allowed size");
+        }
+
+        Optional<User> optionalUser = userRepository.findById(id);
+        User user = optionalUser.orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        String existingPublicId = user.getAvatar();
+        if (existingPublicId != null && !existingPublicId.isEmpty()) {
+            cloudinary.uploader().destroy(existingPublicId, ObjectUtils.emptyMap());
+        }
+
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+        String publicId = (String) uploadResult.get("public_id");
+        String url = (String) uploadResult.get("url");
+
+        user.setAvatar(publicId);
+        userRepository.save(user);
+
+        return url;
+    }
+
+    public long getMaxFileSizeInBytes() {
+        String[] parts = maxFileSize.split("(?i)(?<=[0-9])(?=[a-z])");
+        long size = Long.parseLong(parts[0]);
+        String unit = parts[1].toUpperCase();
+        switch (unit) {
+            case "KB":
+                size *= 1024;
+                break;
+            case "MB":
+                size *= 1024 * 1024;
+                break;
+            case "GB":
+                size *= 1024 * 1024 * 1024;
+                break;
+        }
+        return size;
     }
 
 }
