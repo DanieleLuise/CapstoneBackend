@@ -75,6 +75,8 @@ public class UserController {
                         .withLastName(model.lastName())
                         .withUsername(model.username())
                         .withEmail(model.email())
+                        .withCitta(model.citta())
+                        .withCodiceFiscale(model.codiceFiscale())
                         .withPassword(model.password())
                         .build());
 

@@ -20,10 +20,14 @@ public class SecurityUserDetails implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private String password;
     private String username;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    @Builder.Default
+    private boolean accountNonExpired = true;
+    @Builder.Default
+    private boolean accountNonLocked = true;
+    @Builder.Default
+    private boolean credentialsNonExpired = true;
+    @Builder.Default
+    private boolean enabled = true;
 
     public static SecurityUserDetails build(User user) {
         var authorities = user.getRoles().stream()

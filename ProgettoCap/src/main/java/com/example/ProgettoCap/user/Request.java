@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class Request {
@@ -21,5 +23,7 @@ public class Request {
     private String citta;
     @NotEmpty(message = "il campo codice fiscale e' obbligatorio")
     private String codiceFiscale;
-
+    private String password;
+    private String avatar;
+    private List<Role> roles;
 }

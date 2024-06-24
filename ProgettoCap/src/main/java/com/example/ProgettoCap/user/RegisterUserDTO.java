@@ -12,6 +12,8 @@ public class RegisterUserDTO {
     String lastName;
     String username;
     String email;
+    String citta;
+    String codiceFiscale;
     String password;
     String avatar;
 }

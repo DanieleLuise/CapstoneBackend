@@ -27,6 +27,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             log.info("Processing AuthTokenFilter");
+            System.out.println("--------"+ request.getServletPath());
 
             var header = request.getHeader("Authorization");
 

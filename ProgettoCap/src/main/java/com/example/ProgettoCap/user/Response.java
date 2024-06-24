@@ -2,6 +2,8 @@ package com.example.ProgettoCap.user;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Response {
     private Long id;
@@ -10,5 +12,7 @@ public class Response {
     private String email;
     private String citta;
     private String codiceFiscale;
-
+    private String password;
+    private String avatar;
+    private List<Role> roles;
 }

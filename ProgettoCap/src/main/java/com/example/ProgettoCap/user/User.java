@@ -4,7 +4,10 @@ import com.example.ProgettoCap.carrello.Carrello;
 import com.example.ProgettoCap.prodotto.Prodotto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +15,18 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(setterPrefix = "with")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(nullable = false)
-    private String nome;
+    private String firstName;
     @Column(nullable = false)
-    private String cognome;
+    private String lastName;
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
@@ -44,4 +50,12 @@ public class User {
     @JsonIgnoreProperties({"user","righeCarrello"})
     private Carrello carrello;
 
+    @Builder.Default
+    private boolean accountNonExpired = true;
+    @Builder.Default
+    private boolean accountNonLocked = true;
+    @Builder.Default
+    private boolean credentialsNonExpired = true;
+    @Builder.Default
+    private boolean enabled = true;
 }

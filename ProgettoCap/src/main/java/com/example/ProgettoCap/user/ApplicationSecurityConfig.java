@@ -24,9 +24,10 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @EnableWebSecurity()
 @EnableMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig {
+
     @Bean
     PasswordEncoder stdPasswordEncoder() {
-        return new BCryptPasswordEncoder(11);
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean
@@ -54,12 +55,12 @@ public class ApplicationSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/login").permitAll()
-                        .requestMatchers("/users/registerAdmin").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/user/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/users/{id}").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/user/{id}").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/**").hasAuthority("ADMIN")
                 )

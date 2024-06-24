@@ -64,7 +64,7 @@ public class UserService {
     //Post
     @Transactional
     public com.example.ProgettoCap.user.Response create (@Valid Request request) {
-            if (userRepository.existsByCodiceFiscaleAndNomeAndCognome(request.getCodiceFiscale(), request.getNome(),request.getCognome())){
+            if (userRepository.existsByCodiceFiscaleAndFirstNameAndLastName(request.getCodiceFiscale(), request.getNome(),request.getCognome())){
                 throw new EntityExistsException("il venditore esiste già");
         }
             User entity = new User();
@@ -114,8 +114,8 @@ public class UserService {
             var dto = LoginResponseDTO.builder()
                     .withUser(RegisteredUserDTO.builder()
                             .withId(user.getId())
-                            .withFirstName(user.getNome())
-                            .withLastName(user.getCognome())
+                            .withFirstName(user.getFirstName())
+                            .withLastName(user.getLastName())
                             .withEmail(user.getEmail())
                             .withUsername(user.getUsername())
                             .build())
@@ -137,11 +137,19 @@ public class UserService {
         if (userRepository.existsByEmail(register.getEmail())) {
             throw new EntityExistsException("Email gia' registrata");
         }
-        Role role = roleRepository.findById("USER").orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        Role role = roleRepository.findById("USER").orElse(roleRepository.save(Role.builder()
+                        .withRoleType("USER")
+                .build()));
         User user = new User();
         BeanUtils.copyProperties(register, user);
-        user.setPassword(encoder.encode(register.getPassword()));
+        String encodedPassword = encoder.encode(register.getPassword());
+
+        user.setPassword(encodedPassword);
         user.getRoles().add(role);
+        user.setAccountNonLocked(true); // Assicurati che sia impostato su true
+        user.setEnabled(true); // Assicurati che sia impostato su true
+        user.setAccountNonExpired(true); // Assicurati che sia impostato su true
+        user.setCredentialsNonExpired(true);
         userRepository.save(user);
         RegisteredUserDTO response = new RegisteredUserDTO();
         BeanUtils.copyProperties(user, response);

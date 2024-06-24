@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder(setterPrefix = "with")
 public class Role {
+    public static final String ROLES_ADMIN = "ADMIN";
     @Id
     private String roleType;
 }

@@ -1,6 +1,6 @@
 package com.example.ProgettoCap.user;
 
 public interface UserResponsePrj {
-    String getNome();
-    String getCognome();
+    String getFirstName();
+    String getLastName();
 }
