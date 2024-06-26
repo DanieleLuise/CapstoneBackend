@@ -20,8 +20,6 @@ public class Carrello {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-
-
     @OneToOne
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"carrello",})
