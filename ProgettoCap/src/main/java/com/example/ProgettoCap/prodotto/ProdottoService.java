@@ -1,5 +1,7 @@
 package com.example.ProgettoCap.prodotto;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.ProgettoCap.user.User;
 import com.example.ProgettoCap.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -7,8 +9,15 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+
+
+
 
 @Service
 public class ProdottoService {
@@ -17,6 +26,12 @@ public class ProdottoService {
     ProdottoRepository prodottoRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private Cloudinary cloudinary;
+
+
+
+
 
     //GET
     public List<ProdottoResponsePrj> findAll(){
@@ -33,14 +48,21 @@ public class ProdottoService {
 
     //POST
     @Transactional
-    public ProdottoResponse create(ProdottoRequest request){
+    public ProdottoResponse create(ProdottoRequest request, MultipartFile file)throws IOException{
         // Verifica se l'ID dello user esiste nel database
         User user = userRepository.findById(request.getIdUser())
                 .orElseThrow(() -> new EntityNotFoundException("Venditore non trovato con ID: " + request.getIdUser()));
 
+        // Caricamento dell'immagine su Cloudinary
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        String imageUrl = (String) uploadResult.get("url");
+
         // Creazione di un nuovo oggetto Prodotto
         Prodotto entity = new Prodotto();
         BeanUtils.copyProperties(request, entity);
+
+        // Imposta l'URL dell'immagine
+        entity.setImmagine(imageUrl);
 
         // Associazione dello user al prodotto
         entity.setUser(user);

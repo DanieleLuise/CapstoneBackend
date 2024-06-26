@@ -9,6 +9,7 @@ public class ProdottoResponse {
     private String nome;
     private String descrizione;
     private Double prezzo;
+    private String immagine;
     private User user;
 
 }

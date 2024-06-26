@@ -30,7 +30,7 @@ public class Prodotto {
     @JsonIgnoreProperties({"prodotti", "carrello"})
     @ToString.Exclude
     private User user;
-
+    private String Immagine;
     @OneToMany(mappedBy = "prodotto")
     @JsonIgnoreProperties({"prodotto", "carrello"})
     private List<RigaCarrello> righeCarrello;

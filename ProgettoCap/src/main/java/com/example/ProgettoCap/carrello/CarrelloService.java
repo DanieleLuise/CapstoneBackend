@@ -1,5 +1,6 @@
 package com.example.ProgettoCap.carrello;
 
+import com.example.ProgettoCap.email.EmailService;
 import com.example.ProgettoCap.prodotto.Prodotto;
 import com.example.ProgettoCap.prodotto.ProdottoRepository;
 import com.example.ProgettoCap.user.User;
@@ -21,7 +22,8 @@ public class CarrelloService {
     private ProdottoRepository prodottoRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private EmailService emailService;
 
 
     public List<Carrello> getAllCarrelli() {
@@ -95,7 +97,16 @@ public class CarrelloService {
                 .orElseThrow(() -> new EntityNotFoundException("Carrello non trovato con ID: " + carrelloId));
 
         carrello.getRigheCarrello().clear();
-        return carrelloRepository.save(carrello);
+        Carrello savedCarrello = carrelloRepository.save(carrello);
+
+        // Ottenere l'email dell'utente
+        User user = carrello.getUser();
+        String email = user.getEmail();
+
+        // Inviare email di conferma acquisto
+        emailService.sendPurchaseConfirmationEmail(email);
+
+        return savedCarrello;
     }
 
 

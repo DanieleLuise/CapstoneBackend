@@ -10,6 +10,7 @@ public class CompleteResponse {
     private String descrizione;
     private Double prezzo;
     private int quantità;
+    private String immagine;
     private User user;
 
 }

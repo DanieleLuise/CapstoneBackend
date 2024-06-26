@@ -26,4 +26,18 @@ public class EmailService {
             e.printStackTrace(); // gestisci l'errore in modo adeguato
         }
     }
+    public void sendPurchaseConfirmationEmail(String recipientEmail) {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        try {
+            helper.setTo(recipientEmail);
+            helper.setSubject("Conferma di Acquisto");
+            helper.setText("Complimenti per l'ottima scelta! Il tuo ordine è stato ricevuto e verrà elaborato a breve.");
+
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace(); // gestisci l'errore in modo adeguato
+        }
+    }
 }
