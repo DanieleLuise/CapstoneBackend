@@ -48,9 +48,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
             else {
-                System.out.println("---------------- No Token");
-            }
+               // System.out.println("---------------- No Token");
 
+            }
+            System.out.println("---filter finito");
         } catch (Exception e) {
             log.error("Exception in auth filter", e);
         }

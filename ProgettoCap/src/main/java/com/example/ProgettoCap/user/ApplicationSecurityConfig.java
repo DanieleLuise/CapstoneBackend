@@ -59,6 +59,7 @@ public class ApplicationSecurityConfig {
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/carrelli/user/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/carrelli/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/prodotti/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()

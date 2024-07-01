@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,21 +49,25 @@ public class ProdottoService {
 
     //POST
     @Transactional
-    public ProdottoResponse create(ProdottoRequest request, MultipartFile file)throws IOException{
+    public ProdottoResponse create(ProdottoRequest request, MultipartFile[] files) throws IOException {
         // Verifica se l'ID dello user esiste nel database
         User user = userRepository.findById(request.getIdUser())
                 .orElseThrow(() -> new EntityNotFoundException("Venditore non trovato con ID: " + request.getIdUser()));
 
-        // Caricamento dell'immagine su Cloudinary
-        Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        String imageUrl = (String) uploadResult.get("url");
+        // Caricamento delle immagini su Cloudinary
+        List<String> imageUrls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            String imageUrl = (String) uploadResult.get("url");
+            imageUrls.add(imageUrl);
+        }
 
         // Creazione di un nuovo oggetto Prodotto
         Prodotto entity = new Prodotto();
         BeanUtils.copyProperties(request, entity);
 
-        // Imposta l'URL dell'immagine
-        entity.setImmagine(imageUrl);
+        // Imposta l'URL delle immagini
+        entity.setImmagine(String.join(",", imageUrls)); // Concatenazione degli URL in una singola stringa separata da virgole
 
         // Associazione dello user al prodotto
         entity.setUser(user);
@@ -75,7 +80,6 @@ public class ProdottoService {
         BeanUtils.copyProperties(savedEntity, prodottoResponse);
         prodottoResponse.setUser(user);
         return prodottoResponse;
-
     }
 
     //PUT

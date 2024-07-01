@@ -36,7 +36,6 @@ public class Prodotto {
     private List<RigaCarrello> righeCarrello;
 
 
-
     private boolean isAvailable = true;
 
 

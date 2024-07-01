@@ -1,6 +1,7 @@
 package com.example.ProgettoCap.prodotto;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,15 +34,21 @@ public class ProdottoController {
         }
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProdottoResponse> createProdotto(
-            @RequestPart("prodotto") ProdottoRequest prodottoRequest,
-            @RequestPart("file") MultipartFile file) {
+            @RequestPart("prodotto") String prodottoJson,
+            @RequestPart("file") MultipartFile[] files) {
         try {
-            ProdottoResponse prodottoResponse = prodottoService.create(prodottoRequest, file);
+            ObjectMapper objectMapper = new ObjectMapper();
+            ProdottoRequest prodottoRequest = objectMapper.readValue(prodottoJson, ProdottoRequest.class);
+            ProdottoResponse prodottoResponse = prodottoService.create(prodottoRequest, files);
             return ResponseEntity.status(HttpStatus.CREATED).body(prodottoResponse);
         } catch (IOException e) {
+            System.out.println("----"+ e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            System.out.println("----"+ e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
