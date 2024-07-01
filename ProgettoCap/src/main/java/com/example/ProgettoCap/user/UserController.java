@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
+
 @RequestMapping("/user")
 public class UserController {
 
@@ -48,12 +52,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Response> updateUser(@PathVariable Long id, @RequestBody Request request) {
+
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Response> updateUser(
+            @PathVariable Long id,
+            @RequestPart("user") Request request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            return ResponseEntity.ok(userService.modify(id, request));
+            Response response = userService.updateUser(id, request, file);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -64,6 +76,7 @@ public class UserController {
     }
 
     // LOGIN E REGISTER
+
     @PostMapping("/register")
     public ResponseEntity<RegisteredUserDTO> register(@RequestBody @Validated RegisterUserModel model, BindingResult validator) {
         if (validator.hasErrors()) {
@@ -78,6 +91,7 @@ public class UserController {
                         .withCitta(model.citta())
                         .withCodiceFiscale(model.codiceFiscale())
                         .withPassword(model.password())
+                        .withAvatar(model.avatar())
                         .build());
 
         return new ResponseEntity<>(registeredUser, HttpStatus.OK);
@@ -90,26 +104,20 @@ public class UserController {
         }
         return new ResponseEntity<>(userService.login(model.username(), model.password()).orElseThrow(), HttpStatus.OK);
     }
-
-    @PostMapping("/{username}/avatar")
-    public ResponseEntity<String> uploadAvatar(@PathVariable String username, @RequestParam("file") MultipartFile file) {
+    @PostMapping("/{id}/avatar")
+    public ResponseEntity<Map<String, String>> uploadAvatar(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
-            var uploadResult = cloudinary.uploader().upload(file.getBytes(), com.cloudinary.utils.ObjectUtils.asMap("public_id", username + "_avatar"));
-            String url = uploadResult.get("url").toString();
-            Optional<User> userOptional = userRepository.findOneByUsername(username);
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                user.setAvatar(url);
-                userRepository.save(user);
-                return ResponseEntity.ok(url);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-            }
+            String url = userService.uploadAvatar(id, file);
+            Map<String, String> response = new HashMap<>();
+            response.put("url", url);
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload avatar");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to upload avatar"));
         }
     }
+
+
 
     @GetMapping("/{username}/avatar")
     public ResponseEntity<String> getUserAvatar(@PathVariable String username) {
@@ -119,5 +127,6 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Avatar not found");
         }
+
     }
 }

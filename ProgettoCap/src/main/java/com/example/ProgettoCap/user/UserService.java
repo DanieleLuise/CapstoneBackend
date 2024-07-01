@@ -90,6 +90,34 @@ public class UserService {
         return response;
     }
 
+
+    @Transactional
+    public Response updateUser(Long id, Request request, MultipartFile file) throws IOException {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("User non trovato con ID: " + id);
+        }
+
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User non trovato con ID: " + id));
+
+        if (file != null && !file.isEmpty()) {
+            String existingPublicId = user.getAvatar();
+            if (existingPublicId != null && !existingPublicId.isEmpty()) {
+                cloudinary.uploader().destroy(existingPublicId, ObjectUtils.emptyMap());
+            }
+
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            String imageUrl = (String) uploadResult.get("url");
+            user.setAvatar(imageUrl);
+        }
+
+        BeanUtils.copyProperties(request, user);
+        userRepository.save(user);
+
+        Response response = new Response();
+        BeanUtils.copyProperties(user, response);
+        return response;
+    }
+
     //DELETE
     public String delete(Long id){
         if (!userRepository.existsById(id)){
@@ -118,6 +146,8 @@ public class UserService {
                             .withLastName(user.getLastName())
                             .withEmail(user.getEmail())
                             .withUsername(user.getUsername())
+                            .withCitta(user.getCitta())
+                            .withCodiceFiscale(user.getCodiceFiscale())
                             .build())
                     .build();
 
@@ -159,6 +189,16 @@ public class UserService {
         return response;
     }
 
+
+    public String extractPublicIdFromUrl(String url) {
+        String[] urlParts = url.split("/");
+        String fileName = urlParts[urlParts.length - 1];
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            throw new IllegalArgumentException("URL does not contain a valid file extension");
+        }
+        return fileName.substring(0, fileName.lastIndexOf('.'));
+    }
     @Transactional
     public String uploadAvatar(Long id, MultipartFile image) throws IOException {
         long maxFileSize = getMaxFileSizeInBytes();
@@ -169,16 +209,17 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(id);
         User user = optionalUser.orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
-        String existingPublicId = user.getAvatar();
-        if (existingPublicId != null && !existingPublicId.isEmpty()) {
-            cloudinary.uploader().destroy(existingPublicId, ObjectUtils.emptyMap());
+        String Url = user.getAvatar();
+        if (Url != null ) {
+        String publicId = this.extractPublicIdFromUrl(Url);
+        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
         }
 
+
         Map<String, Object> uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
-        String publicId = (String) uploadResult.get("public_id");
         String url = (String) uploadResult.get("url");
 
-        user.setAvatar(publicId);
+        user.setAvatar(url);
         userRepository.save(user);
 
         return url;

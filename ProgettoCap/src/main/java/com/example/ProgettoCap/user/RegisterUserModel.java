@@ -18,6 +18,8 @@ public record RegisterUserModel (
         String citta,
         @NotBlank
         String codiceFiscale,
+
+        String avatar,
         @NotBlank(message = "La password non può contenere solo spazi vuoti")
         @Size(max = 125, message = "La password è troppo lunga, max 125 caratteri")
         String password
