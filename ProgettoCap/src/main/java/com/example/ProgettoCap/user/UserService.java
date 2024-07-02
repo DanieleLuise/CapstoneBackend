@@ -64,7 +64,7 @@ public class UserService {
     //Post
     @Transactional
     public com.example.ProgettoCap.user.Response create (@Valid Request request) {
-            if (userRepository.existsByCodiceFiscaleAndFirstNameAndLastName(request.getCodiceFiscale(), request.getNome(),request.getCognome())){
+            if (userRepository.existsByCodiceFiscaleAndFirstNameAndLastName(request.getCodiceFiscale(), request.getFirstName(),request.getLastName())){
                 throw new EntityExistsException("il venditore esiste già");
         }
             User entity = new User();

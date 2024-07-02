@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class Request {
     @NotEmpty(message = "il campo nome e' obbligatorio")
-    private String nome;
+    private String firstName;
     @NotEmpty(message = "il campo cognome e' obbligatorio")
-    private String cognome;
+    private String lastName;
     @NotEmpty(message = "il campo username e' obbligatorio")
     private String username;
     @NotEmpty(message = "il compo email e' obbligatorio")
