@@ -82,6 +82,22 @@ public class ProdottoService {
         return prodottoResponse;
     }
 
+
+    @Transactional
+    public ProdottoResponse updateProductQuantity(Long id, int newQuantity) {
+        Prodotto prodotto = prodottoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Prodotto non trovato con ID: " + id));
+        prodotto.setQuantita(newQuantity);
+        prodotto.setAvailable(newQuantity > 0);
+        Prodotto updatedProdotto = prodottoRepository.save(prodotto);
+        ProdottoResponse response = new ProdottoResponse();
+        BeanUtils.copyProperties(updatedProdotto, response);
+        response.setUser(updatedProdotto.getUser());
+        return response;
+
+    }
+
+
     //PUT
     public ProdottoResponse modify(Long id, ProdottoRequest prodottoRequest){
         if (!userRepository.existsById(prodottoRequest.getIdUser())){

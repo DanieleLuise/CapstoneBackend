@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/prodotti")
@@ -52,6 +53,15 @@ public class ProdottoController {
         }
     }
 
+    @PutMapping("/{id}/quantity")
+    public ResponseEntity<ProdottoResponse> updateProductQuantity(@PathVariable Long id, @RequestBody Map<String, Integer> quantityMap) {
+        Integer newQuantity = quantityMap.get("quantity");
+        if (newQuantity == null) {
+            throw new IllegalArgumentException("Quantity must not be null");
+        }
+        ProdottoResponse updatedProdotto = prodottoService.updateProductQuantity(id, newQuantity);
+        return ResponseEntity.ok(updatedProdotto);
+    }
 
 
     @PutMapping("/{id}")
