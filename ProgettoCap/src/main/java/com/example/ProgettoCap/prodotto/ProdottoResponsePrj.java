@@ -10,6 +10,7 @@ public interface ProdottoResponsePrj {
     Double getPrezzo(); //
     int getQuantita();
     String getImmagine();//
+    Long idUser();
 
     @Value("#{target.user.firstName}") // l'annotazione Value recupera la posizione dell'elemento richiesto all'interno della classe
     String getFirstName();

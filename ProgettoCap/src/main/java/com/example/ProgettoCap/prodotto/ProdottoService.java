@@ -116,14 +116,15 @@ public class ProdottoService {
 
    //DELETE
     public String delete(Long id){
-        if (!prodottoRepository.existsById(id)){
-            throw new EntityNotFoundException("prodotto non trovato");
+            if (!prodottoRepository.existsById(id)) {
+                throw new EntityNotFoundException("prodotto non trovato con id: " + id);
+            }
+            prodottoRepository.deleteById(id);
+            return "prodotto eliminato";
         }
-        prodottoRepository.deleteById(id);
-        return "prodotto eliminato";
     }
 
 
 
 
-}
+

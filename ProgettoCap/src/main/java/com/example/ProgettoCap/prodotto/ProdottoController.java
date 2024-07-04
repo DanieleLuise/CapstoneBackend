@@ -74,8 +74,14 @@ public class ProdottoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProdotto(@PathVariable Long id) {
-        prodottoService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteProdotto(@PathVariable Long id) {
+        try {
+            prodottoService.delete(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
     }
 }

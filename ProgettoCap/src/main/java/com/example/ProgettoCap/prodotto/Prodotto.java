@@ -24,6 +24,9 @@ public class Prodotto {
     private Double prezzo;
     @Column(nullable = false)
     private int quantita;
+    @Column(nullable = false)
+    private Long idUser;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")

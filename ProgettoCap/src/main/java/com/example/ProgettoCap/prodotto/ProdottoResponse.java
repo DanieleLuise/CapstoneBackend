@@ -10,6 +10,7 @@ public class ProdottoResponse {
     private String descrizione;
     private Double prezzo;
     private int quantita;
+    private Long idUser;
     private String immagine;
     private User user;
 
